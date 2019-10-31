@@ -1,5 +1,7 @@
-secrets/
+secrets/*
+!secrets/example__init__.py
 secrets.py
 .vscode/
 output/*
 !output/.gitkeep
+.python-version
