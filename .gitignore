@@ -1,0 +1,5 @@
+secrets/
+secrets.py
+.vscode/
+output/*
+!output/.gitkeep
