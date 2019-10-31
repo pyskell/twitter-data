@@ -18,8 +18,8 @@ following_usernames = t.user_lookup(following)
 
 with driver.session() as session:
   statement = '''
-  MATCH (a: User {screen_name: {screen_name_a}})
-  MATCH (b: User {screen_name: {screen_name_b}})
+  MERGE (a: User {screen_name: {screen_name_a}})
+  MERGE (b: User {screen_name: {screen_name_b}})
   MERGE (a)-[r:FOLLOWS]->(b)
   '''
 
