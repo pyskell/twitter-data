@@ -16,21 +16,33 @@ follower_usernames = t.user_lookup(followers)
 following = t.friend_ids(target_username)
 following_usernames = t.user_lookup(following)
 
+
 with driver.session() as session:
   statement = '''
-  MERGE (a: User {screen_name: {screen_name_a}})
-  MERGE (b: User {screen_name: {screen_name_b}})
+  MERGE (a: User {
+    id:coalesce({user_a_props}.id,0),
+    screen_name:coalesce({user_a_props}.screen_name, ""),
+    friends_count: coalesce({user_a_props}.friends_count, 0),
+    description: coalesce({user_a_props}.description, "")
+    })
+  MERGE (b: User {
+    id:coalesce({user_a_props}.id,0),
+    screen_name:coalesce({user_a_props}.screen_name, ""),
+    friends_count: coalesce({user_a_props}.friends_count, 0),
+    description: coalesce({user_a_props}.description, "")
+    })
   MERGE (a)-[r:FOLLOWS]->(b)
   '''
+  user = {'screen_name' : target_username}
 
   for fu in follower_usernames:
     tx = session.begin_transaction()
-    session.run(statement, screen_name_a=fu['screen_name'], screen_name_b=target_username)
+    session.run(statement, user_a_props=fu, user_b_props=user)
     tx.commit()
 
   for fu in following_usernames:
     tx = session.begin_transaction()
-    session.run(statement, screen_name_a=target_username, screen_name_b=fu['screen_name'])
+    session.run(statement, user_a_props=user, user_b_props=fu)
     tx.commit()
 
 # with open('./output/my_followers_usernames.txt', 'w') as output:
