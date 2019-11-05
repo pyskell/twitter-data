@@ -5,3 +5,4 @@ secrets.py
 output/*
 !output/.gitkeep
 .python-version
+*.csv
