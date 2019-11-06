@@ -1,14 +1,19 @@
 import csv
 import sys
 
-def filter_csv(connections, edges, output):
+def unique_csv(connections, column):
   connections_list = []
   with open(connections, 'r', newline='') as connections_file:
     reader = csv.reader(connections_file, delimiter=',')
 
     for row in reader:
-      if row[0] not in connections_list:
-        connections_list.append(row[0])
+      if row[column] not in connections_list:
+        connections_list.append(row[column])
+
+  return connections_list
+
+def filter_csv(connections, edges, output):
+  connections_list = unique_csv(connections, 0)
   
   with open(edges, 'r', newline='') as edges_file, open(output, 'w', newline='') as output_file:
     reader = csv.DictReader(edges_file, delimiter=',') # ['Source', 'Target']
